@@ -1,4 +1,5 @@
 import sys
+import shutil
 from pathlib import Path
 from normalize import normalize
 # словник з розширеннями файлів, що оброблюються
@@ -35,29 +36,40 @@ def filetype (suffix):
 # з нормалізацією та переміщенням
 # перший прогон - тільки для інформації скільки і чого є 
 def sorting (path, action = False):
-    for file in path.iterdir():
-#        print (file)
+    if action:
+        path_video = path / 'video'
+        path_video.mkdir (exist_ok = True, parents = True)
+    for file in path.iterdir(): #ім'я файлу з розширенням
         if file.is_dir():
-            sorting (file)
+            if action:
+                normalize (file.name)
+                sorting (file, action = True)
+            else: sorting (file)
         else:
-#            print (f'{file.name} its {filetype (file.suffix)}')
+            if action:
+                pass
+#                normalize (file.name)
+#            print (file.name)
             all_files.append (filetype (file.suffix))
-#            files_dict.update ({filetype (file.suffix), file.name})
     return all_files
 
 # початок роботи програми - пишемо в консоль и виклик функції
 if __name__ == '__main__':
     sorting (path)
 
-#функція виводу результатів
+#вивід результатів першого прогону
     print (f'Вміст папки: {path}')
+    print ('|{:-^15}|{:-^10}|'.format ('-', '-'))
     print ('|{:^15}|{:^10}|'.format ('Типи файлів', 'Кількість'))
+    print ('|{:-^15}|{:-^10}|'.format ('-', '-'))
     print ('|{:<15}|{:^10}|'.format ('Зображення', all_files.count('images')))
     print ('|{:<15}|{:^10}|'.format ('Відео', all_files.count('video')))
     print ('|{:<15}|{:^10}|'.format ('Документи', all_files.count('documents')))
     print ('|{:<15}|{:^10}|'.format ('Музика', all_files.count('audio')))
     print ('|{:<15}|{:^10}|'.format ('Архіви', all_files.count('archives')))
     print ('|{:<15}|{:^10}|'.format ('Інші типи', all_files.count('other')))
+    print ('|{:-^15}|{:-^10}|'.format ('-', '-'))
+    print ('|{:<15}|{:^10}|'.format ('Разом', len (all_files)))
     print ('')
     print (f'Знайдено наступні відомі типи файлів: {suff_used_known}')
     print (f'Знайдено наступні невідомі типи файлів: {suff_used_unknown}')
@@ -70,7 +82,7 @@ if __name__ == '__main__':
             yn = input("Будь ласка, введіть 'y' або 'n': ") 
         else: break
     if yn == 'n':
-        print ('Дякую за увагу!')
-        print (normalize('Дякую за увагу! К:и%р;и!л№о123Kiriloc?'))
+        print ('\nДякую за увагу!\n')
+#        print (normalize('Дякую за увагу! К:и%р;и!л№о123Kiriloc?'))
     else:
-        sorting (path)
+        sorting (path, action = True)
