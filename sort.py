@@ -84,17 +84,30 @@ def sorting (path, action = False):
     return all_files
 
 # початок роботи програми - пишемо в консоль и виклик функції
-sorting (path)
+if __name__ == '__main__':
+    sorting (path)
 
 #функція виводу результатів
-print (f'Вміст папки: {path}')
-print ('|{:^15}|{:^10}|'.format ('Типи файлів', 'Кількість'))
-print ('|{:<15}|{:^10}|'.format ('Зображення', all_files.count('images')))
-print ('|{:<15}|{:^10}|'.format ('Відео', all_files.count('video')))
-print ('|{:<15}|{:^10}|'.format ('Документи', all_files.count('documents')))
-print ('|{:<15}|{:^10}|'.format ('Музика', all_files.count('audio')))
-print ('|{:<15}|{:^10}|'.format ('Архіви', all_files.count('archives')))
-print ('|{:<15}|{:^10}|'.format ('Інші типи', all_files.count('other')))
-print ('')
-print (f'Знайдено наступні відомі типи файлів: {suff_used_known}')
-print (f'Знайдено наступні невідомі типи файлів: {suff_used_unknown}')
+    print (f'Вміст папки: {path}')
+    print ('|{:^15}|{:^10}|'.format ('Типи файлів', 'Кількість'))
+    print ('|{:<15}|{:^10}|'.format ('Зображення', all_files.count('images')))
+    print ('|{:<15}|{:^10}|'.format ('Відео', all_files.count('video')))
+    print ('|{:<15}|{:^10}|'.format ('Документи', all_files.count('documents')))
+    print ('|{:<15}|{:^10}|'.format ('Музика', all_files.count('audio')))
+    print ('|{:<15}|{:^10}|'.format ('Архіви', all_files.count('archives')))
+    print ('|{:<15}|{:^10}|'.format ('Інші типи', all_files.count('other')))
+    print ('')
+    print (f'Знайдено наступні відомі типи файлів: {suff_used_known}')
+    print (f'Знайдено наступні невідомі типи файлів: {suff_used_unknown}')
+    print ('')
+    yn = input ('Продовжити виконання завдання: перейменування файлів за \
+допомогою транслітерації та їх переміщення у папки за типами \
+(y - yes / n - no): ')
+    while True:
+        if yn not in 'yn':
+            yn = input("Будь ласка, введіть 'y' або 'n': ") 
+        else: break
+    if yn == 'n':
+        print ('Дякую за увагу!')
+    else:
+        sorting (path)
