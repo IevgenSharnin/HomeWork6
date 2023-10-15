@@ -30,4 +30,6 @@ def normalize(name):
             name_ = name_.replace (letter, '_')
     return name_.translate (DICT_TRANSLATE)
 
-#print (normalize('К:и%р;и!л№о123Kiriloc?'))
+if __name__ == '__main__':
+# тестовий рядок для нормалізації
+    print (normalize('К:и%р;и!л№о123Kiriloc?'))
