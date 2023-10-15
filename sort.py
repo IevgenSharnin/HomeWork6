@@ -10,14 +10,8 @@ DICT_FOR_EXT = {'archives': ['ZIP', 'GZ', 'TAR'],
                   'images': ['JPEG', 'PNG', 'JPG', 'SVG'],
                   'other': []}
 
-files_dict = DICT_FOR_EXT.copy()
-PATH = Path('D:/Crap') # вихідна папка для сортування
-archives = DICT_FOR_EXT.get ('archives')
-video = DICT_FOR_EXT.get ('video')
-audio = DICT_FOR_EXT.get ('audio')
-documents = DICT_FOR_EXT.get ('documents')
-images = DICT_FOR_EXT.get ('images')
-other = all_files = []
+#PATH = Path('D:/Crap') # вихідна папка для сортування
+all_files = []
 suff_used_known = set ()
 suff_used_unknown = set()
 
@@ -48,6 +42,7 @@ def sorting (path_, action = False):
             if action: 
                 file_name_norm = f'{normalize (file.stem)}{file.suffix}'
                 file.replace (PATH / filetype (file.suffix) / file_name_norm)
+# а тут розпаковую архів
                 if filetype (file.suffix) == 'archives':
                     shutil.unpack_archive (PATH / 'archives' / file_name_norm, 
                                            PATH / 'archives' / file.stem)
@@ -75,6 +70,7 @@ def work_with_directories (path_: Path, action):
 
 # початок роботи програми - пишемо в консоль и виклик функції
 if __name__ == '__main__':
+    PATH = Path(sys.argv [1])
     sorting (PATH)
 
 #вивід результатів першого прогону
