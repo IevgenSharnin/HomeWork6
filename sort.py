@@ -46,21 +46,32 @@ def sorting (path_, action = False):
             all_files.append (filetype (file.suffix)) # список усіх типів
 # нормалізую ім'я файлу та переміщую у відповідну папку
             if action: 
-#                pass
                 file_name_norm = f'{normalize (file.stem)}{file.suffix}'
                 file.replace (PATH / filetype (file.suffix) / file_name_norm)
-#            print (f'{file.name} = {file.stem} + {file.suffix}')
+                if filetype (file.suffix) == 'archives':
+                    shutil.unpack_archive (PATH / 'archives' / file_name_norm, 
+                                           PATH / 'archives' / file.stem)
     return all_files
 
-# функція створення папок, в які розсортуємо
+# функція створення папок, в які розсортуємо, та видалення пустих
 # працює, якщо відповідаємо 'у' після першого прогону
-def new_directories (path_):
-    for dir in path_.iterdir(): #ім'я папки
-        if dir.is_dir():
-            dir.replace (PATH / normalize (dir.name))
-    for dir in DICT_FOR_EXT.keys():
-        path_new_dir = path_ / dir
-        path_new_dir.mkdir (exist_ok = True, parents = True)
+# action 'new' створює, action 'del' удаляє 
+def work_with_directories (path_: Path, action):
+    if action == 'new':
+        for dir in path_.iterdir(): #ім'я папки нормалізую
+            if dir.is_dir():
+                dir.replace (PATH / normalize (dir.name))
+        for dir_ in DICT_FOR_EXT.keys(): #створюю папки, якщо немає
+            path_new_dir = path_ / dir_
+            path_new_dir.mkdir (exist_ok = True, parents = True)
+    if action == 'del':
+        for dir in path_.iterdir():
+            if dir.is_dir() and (dir.name not in DICT_FOR_EXT.keys()):
+                try: 
+                    dir.rmdir ()
+                except OSError:
+                    work_with_directories (dir, action = 'del')
+                    print ('Велика вкладеність папок. Запусти програму ще раз')
 
 # початок роботи програми - пишемо в консоль и виклик функції
 if __name__ == '__main__':
@@ -93,9 +104,9 @@ if __name__ == '__main__':
         else: break
     if yn == 'n':
         print ('Дякую за увагу!\n')
-#        print (normalize('Дякую за увагу! К:и%р;и!л№о123Kiriloc?'))
     else:
-        new_directories (PATH) # створюємо цільові папки
+        work_with_directories (PATH, 'new') # створюємо цільові папки
         sorting (PATH, action = True) # нормалізуємо та переміщуємо файли
+        work_with_directories (PATH, 'del') # видаляємо усі пусті папки
         print ('Імена файлів нормалізовані. Файли перемещені у\
  відповідні папки.\n')
